@@ -1,5 +1,14 @@
 /* Classic black (#000000) & white (#FFFFFF) landing chrome — ultranoir-inspired */
 
+/*
+ * Mount sits before #landing-hero-shell (z-10). Without a stacking context above the hero,
+ * fixed chrome paints underneath and taps hit the hero — especially on mobile.
+ */
+#landing-chrome-root {
+  position: relative;
+  z-index: 45;
+}
+
 .landing-classic-chrome {
   --lc-black: #000000;
   --lc-white: #ffffff;
@@ -493,5 +502,24 @@ main.landing-root--next-mode footer {
   /* Lift bottom-right arrow above thumb / home indicator */
   .landing-classic-chrome__bottom-right {
     padding-bottom: 0.85rem;
+  }
+}
+
+/* WCAG ~44px targets; faster taps on coarse pointers (main uses touch-action: none for scroll lock). */
+@media (pointer: coarse) {
+  .landing-classic-chrome__sound-icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .landing-classic-chrome__logo,
+  .landing-classic-chrome__plus {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .landing-classic-chrome button,
+  .landing-classic-chrome__overlay a {
+    touch-action: manipulation;
   }
 }

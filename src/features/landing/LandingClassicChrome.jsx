@@ -80,11 +80,13 @@ export default function LandingClassicChrome() {
     typeof window !== 'undefined' ? window.location.pathname : '/'
   );
   const [soundOn, setSoundOn] = useState(() => {
-    if (typeof window === 'undefined') return false;
+    if (typeof window === 'undefined') return true;
     try {
-      return window.localStorage.getItem(STORAGE_KEY) === '1';
+      const v = window.localStorage.getItem(STORAGE_KEY);
+      if (v === '0') return false;
+      return true;
     } catch {
-      return false;
+      return true;
     }
   });
   const [holding, setHolding] = useState(false);
@@ -314,6 +316,10 @@ export default function LandingClassicChrome() {
     const onMouseUp = () => stopHold();
     const onMouseLeave = () => stopHold();
     const onTouchStart = (e) => {
+      // Never preventDefault unless we're starting a hero/visuals hold. A blanket
+      // preventDefault on every touchstart breaks synthetic clicks for controls
+      // inside main (chrome buttons live under #landing-chrome-root).
+      if (!shouldCountAsHoldStart(e.target)) return;
       if (e.cancelable) e.preventDefault();
       startHold(e.target);
     };

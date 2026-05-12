@@ -1,8 +1,6 @@
 import { lazy, Suspense, useMemo } from 'react';
 import { proxy } from 'valtio';
 
-import ClientDemoTryLinks from '@/components/ClientDemoTryLinks.jsx';
-
 import BottleCanvas from '@/features/bottle-engraving/components/BottleCanvas.jsx';
 
 import ColorPicker from '@/features/3d-configurator/components/ColorPicker.jsx';
@@ -22,15 +20,6 @@ export default function ProductStudioPage({ workspace }) {
   return (
     <div className="bottle-app product-studio">
       {workspace === 'logo' ? <LogoStudioColumns /> : <ColorsStudioColumns />}
-      <ClientDemoTryLinks
-        tone="dark"
-        layout="fixed"
-        alignEnd
-        showConfigurator
-        showBottle
-        showConfigureBottle
-        showHome
-      />
     </div>
   );
 }

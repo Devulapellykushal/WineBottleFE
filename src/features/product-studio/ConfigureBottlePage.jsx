@@ -1,7 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { proxy, useSnapshot } from 'valtio';
 
-import ClientDemoTryLinks from '@/components/ClientDemoTryLinks.jsx';
 import StudioReloadFab from '@/components/StudioReloadFab.jsx';
 
 import BottleCanvas from '@/features/bottle-engraving/components/BottleCanvas.jsx';
@@ -270,8 +269,6 @@ export default function ConfigureBottlePage() {
           labelTexture={labelTexture}
         />
       </section>
-
-      <ClientDemoTryLinks tone="dark" layout="fixed" alignEnd showConfigurator showBottle showHome />
     </div>
   );
 }
