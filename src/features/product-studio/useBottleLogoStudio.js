@@ -3,6 +3,7 @@ import * as THREE from 'three';
 
 import { maxLogoScale } from '@/features/bottle-engraving/constants/bottle.js';
 import { cloneTextureGrayscale, rasterizeSvgFileToDataUrl } from '@/features/bottle-engraving/utils/imageTexture.js';
+import { apiUrl } from '@/lib/api-base.js';
 
 export const LOGO_ACCEPT = '.png,.jpg,.jpeg,.svg,.bmp,.webp,.gif';
 
@@ -157,7 +158,7 @@ export function useBottleLogoStudio() {
 
       const fd = new FormData();
       fd.append('file', uploadFile);
-      const res = await fetch('/api/upload', { method: 'POST', body: fd });
+      const res = await fetch(apiUrl('/api/upload'), { method: 'POST', body: fd });
       const json = await res.json().catch(() => ({}));
       if (!res.ok) {
         throw new Error(
@@ -207,7 +208,7 @@ export function useBottleLogoStudio() {
       a.download = name;
       a.click();
 
-      const saveRes = await fetch('/api/save-mockup', {
+      const saveRes = await fetch(apiUrl('/api/save-mockup'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ imageBase64: dataUrl })
@@ -237,7 +238,7 @@ export function useBottleLogoStudio() {
     try {
       const fd = new FormData();
       fd.append('file', lastRasterFile);
-      const res = await fetch('/api/convert-bmp', { method: 'POST', body: fd });
+      const res = await fetch(apiUrl('/api/convert-bmp'), { method: 'POST', body: fd });
       if (!res.ok) {
         let msg = `BMP conversion failed (${res.status})`;
         try {
