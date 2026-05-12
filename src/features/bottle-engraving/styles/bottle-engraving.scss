@@ -114,6 +114,55 @@ body {
   min-width: 0;
   position: relative;
   background: linear-gradient(180deg, #f0f3f8 0%, #e4e8f0 55%, #dce1eb 100%);
+  scroll-margin-top: 12px;
+}
+
+/* Full-viewport shell until WebGL scene commits (paired with `onSceneReady` from BottleCanvas). */
+.bottle-canvas-boot {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #e8ecf4 0%, #dde3ee 100%);
+  color: rgba(0, 0, 0, 0.72);
+  text-align: center;
+}
+
+.bottle-canvas-boot-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 24px;
+}
+
+.bottle-canvas-boot-inner p {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.bottle-canvas-boot .spinner {
+  border-color: rgba(0, 0, 0, 0.2);
+  border-top-color: rgba(0, 0, 0, 0.75);
+}
+
+/* Shown on small screens only: preview is above controls. */
+.studio-preview-hint {
+  display: none;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.62);
+  margin: 0 0 10px;
+  line-height: 1.45;
+}
+
+.studio-preview-hint a {
+  color: rgba(255, 255, 255, 0.88);
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .bottle-canvas-wrap canvas {
@@ -282,14 +331,23 @@ body {
     flex-direction: column;
   }
 
+  .studio-preview-hint {
+    display: block;
+  }
+
+  /* Preview first on phones / narrow tablets so users always see the 3D stage before controls. */
+  .bottle-canvas-wrap {
+    order: -1;
+    min-height: clamp(300px, 62dvh, 680px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
   .bottle-panel {
+    order: 0;
     width: 100%;
     max-width: none;
     border-right: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
-  }
-
-  .bottle-canvas-wrap {
-    min-height: 55vh;
+    border-bottom: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
   }
 }

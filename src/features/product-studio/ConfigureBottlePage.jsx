@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { proxy, useSnapshot } from 'valtio';
 
 import StudioReloadFab from '@/components/StudioReloadFab.jsx';
@@ -57,6 +57,9 @@ function ConfigureBottleChrome() {
       <p className="lead" style={{ marginTop: 0 }}>
         Adjust body, cap, and neck colors, then upload and place your logo on the same bottle preview.
       </p>
+      <p className="studio-preview-hint">
+        On this screen size, the live 3D preview is above. <a href="#bottle-3d-preview">Jump to preview</a>
+      </p>
     </>
   );
 }
@@ -66,6 +69,8 @@ function ConfigureBottleChrome() {
  */
 export default function ConfigureBottlePage() {
   const logo = useBottleLogoStudio();
+  const [sceneReady, setSceneReady] = useState(false);
+  const onSceneReady = useCallback(() => setSceneReady(true), []);
 
   const bottleState = useMemo(
     () =>
@@ -245,7 +250,15 @@ export default function ConfigureBottlePage() {
         </div>
       </aside>
 
-      <section className="bottle-canvas-wrap" aria-label="3D bottle preview">
+      <section id="bottle-3d-preview" className="bottle-canvas-wrap" aria-label="3D bottle preview">
+        {!sceneReady ? (
+          <div className="bottle-canvas-boot" role="status" aria-live="polite">
+            <div className="bottle-canvas-boot-inner">
+              <div className="spinner" />
+              <p>Loading 3D preview…</p>
+            </div>
+          </div>
+        ) : null}
         {logo.busy ? (
           <div className="spinner-overlay" aria-busy="true">
             <div className="spinner" />
@@ -262,6 +275,7 @@ export default function ConfigureBottlePage() {
           setDragging={logo.setDragging}
           dragStartRef={logo.dragStartRef}
           onGlReady={logo.onGlReady}
+          onSceneReady={onSceneReady}
           bottleColors={bottleState.colors}
           onPickPart={(part) => {
             bottleState.current = part;

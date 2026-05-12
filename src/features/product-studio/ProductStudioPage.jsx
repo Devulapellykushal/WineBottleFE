@@ -1,4 +1,4 @@
-import { lazy, Suspense, useMemo } from 'react';
+import { lazy, Suspense, useCallback, useMemo, useState } from 'react';
 import { proxy } from 'valtio';
 
 import BottleCanvas from '@/features/bottle-engraving/components/BottleCanvas.jsx';
@@ -26,6 +26,8 @@ export default function ProductStudioPage({ workspace }) {
 
 function LogoStudioColumns() {
   const logo = useBottleLogoStudio();
+  const [sceneReady, setSceneReady] = useState(false);
+  const onSceneReady = useCallback(() => setSceneReady(true), []);
 
   return (
     <>
@@ -36,6 +38,10 @@ function LogoStudioColumns() {
         <p className="lead">
           Upload your logo, position it inside the highlighted safe zone on the 3D bottle, then download a JPEG mockup
           for approval.
+        </p>
+        <p className="studio-preview-hint">
+          On this screen size, the live 3D preview is above.{' '}
+          <a href="#bottle-3d-preview">Jump to preview</a>
         </p>
 
         <div>
@@ -134,7 +140,15 @@ function LogoStudioColumns() {
         </div>
       </aside>
 
-      <section className="bottle-canvas-wrap" aria-label="3D bottle preview">
+      <section id="bottle-3d-preview" className="bottle-canvas-wrap" aria-label="3D bottle preview">
+        {!sceneReady ? (
+          <div className="bottle-canvas-boot" role="status" aria-live="polite">
+            <div className="bottle-canvas-boot-inner">
+              <div className="spinner" />
+              <p>Loading 3D preview…</p>
+            </div>
+          </div>
+        ) : null}
         {logo.busy ? (
           <div className="spinner-overlay" aria-busy="true">
             <div className="spinner" />
@@ -151,6 +165,7 @@ function LogoStudioColumns() {
           setDragging={logo.setDragging}
           dragStartRef={logo.dragStartRef}
           onGlReady={logo.onGlReady}
+          onSceneReady={onSceneReady}
         />
       </section>
     </>
@@ -186,12 +201,21 @@ function ColorsStudioColumns() {
 
         <h1>Studio colors</h1>
         <p className="lead">Orbit the bottle, tap body, cap, or neck, then dial the hex color below.</p>
+        <p className="studio-preview-hint">
+          On this screen size, the 3D bottle is above. <a href="#bottle-3d-preview">Jump to preview</a>
+        </p>
 
         <ColorPicker variant="inline" state={bottleState} updateColor={updateBottleColor} />
       </aside>
 
-      <section className="bottle-canvas-wrap" aria-label="3D bottle colors">
-        <Suspense fallback={<div className="configurator-suspense-fallback">Loading 3D…</div>}>
+      <section id="bottle-3d-preview" className="bottle-canvas-wrap" aria-label="3D bottle colors">
+        <Suspense
+          fallback={
+            <div className="configurator-suspense-fallback" role="status" aria-live="polite">
+              <p style={{ margin: 0 }}>Loading 3D preview…</p>
+            </div>
+          }
+        >
           <LazyConfiguratorColorsWorkspace bottleState={bottleState} updateBottleCurrent={updateBottleCurrent} />
         </Suspense>
       </section>

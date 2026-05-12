@@ -7,6 +7,8 @@
 #landing-chrome-root {
   position: relative;
   z-index: 45;
+  /* Override main.landing-root touch-action:none so fixed chrome always gets fast, reliable taps. */
+  touch-action: manipulation;
 }
 
 .landing-classic-chrome {
@@ -399,7 +401,8 @@ main.landing-root:not(.landing-root--next-mode) {
   height: 100dvh;
   max-height: 100dvh;
   overscroll-behavior: none;
-  touch-action: none;
+  /* Avoid none here: it can suppress descendant taps/emulated touches; scroll is already locked via overflow + gated touchmove. */
+  touch-action: manipulation;
 }
 
 /* Premium cinematic transition on successful hold before entering /next mode. */
@@ -505,7 +508,7 @@ main.landing-root--next-mode footer {
   }
 }
 
-/* WCAG ~44px targets; faster taps on coarse pointers (main uses touch-action: none for scroll lock). */
+/* WCAG ~44px targets; faster taps on coarse pointers (main uses touch-action: manipulation + gated touchmove). */
 @media (pointer: coarse) {
   .landing-classic-chrome__sound-icon {
     width: 44px;

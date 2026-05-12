@@ -74,6 +74,16 @@ function shouldCountAsHoldStart(target) {
   return true;
 }
 
+/** Touches that must not get `touchmove` default-prevented (or clicks break on real devices + DevTools emulation). */
+function shouldAllowTouchMoveDefault(target) {
+  if (!target) return false;
+  if (typeof Element === 'undefined' || !(target instanceof Element)) return false;
+  if (target.closest('#landing-chrome-root')) return true;
+  if (target.closest('#reload-loader')) return true;
+  if (target.closest('a[href], button, input, textarea, select, label, [role="button"]')) return true;
+  return false;
+}
+
 export default function LandingClassicChrome() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [landingPathname, setLandingPathname] = useState(() =>
@@ -354,6 +364,9 @@ export default function LandingClassicChrome() {
 
   useEffect(() => {
     const blockScroll = (ev) => {
+      // Blanket preventDefault on touchmove (scroll lock) breaks synthetic click generation
+      // when the finger moves a few pixels — common on mobile and Chrome device toolbar.
+      if (ev.type === 'touchmove' && shouldAllowTouchMoveDefault(ev.target)) return;
       ev.preventDefault();
     };
 

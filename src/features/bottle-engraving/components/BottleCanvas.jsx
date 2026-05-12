@@ -1,4 +1,4 @@
-import { Suspense, useEffect } from 'react';
+import { Fragment, Suspense, useEffect, useLayoutEffect } from 'react';
 import { Canvas, useThree } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 
@@ -17,6 +17,14 @@ function GlExpose({ onGlReady }) {
   return null;
 }
 
+/** Runs after Suspense content commits so parents can hide boot overlays before paint. */
+function SceneReadyPing({ onSceneReady }) {
+  useLayoutEffect(() => {
+    onSceneReady?.();
+  }, [onSceneReady]);
+  return null;
+}
+
 /** Re-export for any bundle that imported the old name. */
 export const BOTTLE_SCENE_BACKGROUND = STUDIO_3D_BACKGROUND;
 
@@ -32,6 +40,8 @@ export default function BottleCanvas({
   setDragging,
   dragStartRef,
   onGlReady,
+  /** Fires once when the lazy bottle scene has mounted (after Suspense). */
+  onSceneReady,
   /** Optional valtio proxy `{ body, cap, neck }` for bottle materials (combined studio). */
   bottleColors,
   /** When set, body/cap/neck clicks select that part (logo drag is bound to the decal only). */
@@ -61,20 +71,23 @@ export default function BottleCanvas({
         <shadowMaterial opacity={0.18} />
       </mesh>
       <Suspense fallback={<Loader />}>
-        <BottleWithLogo
-          placement={placement}
-          displayTexture={displayTexture}
-          dragOffset={dragOffset}
-          setDragOffset={setDragOffset}
-          logoScale={logoScale}
-          setLogoScale={setLogoScale}
-          dragging={dragging}
-          setDragging={setDragging}
-          dragStartRef={dragStartRef}
-          colors={bottleColors}
-          onPickPart={onPickPart}
-          labelTexture={labelTexture}
-        />
+        <Fragment>
+          <SceneReadyPing onSceneReady={onSceneReady} />
+          <BottleWithLogo
+            placement={placement}
+            displayTexture={displayTexture}
+            dragOffset={dragOffset}
+            setDragOffset={setDragOffset}
+            logoScale={logoScale}
+            setLogoScale={setLogoScale}
+            dragging={dragging}
+            setDragging={setDragging}
+            dragStartRef={dragStartRef}
+            colors={bottleColors}
+            onPickPart={onPickPart}
+            labelTexture={labelTexture}
+          />
+        </Fragment>
       </Suspense>
       <OrbitControls makeDefault minDistance={1.35} maxDistance={4.5} enablePan={false} />
     </Canvas>
