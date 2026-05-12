@@ -12,8 +12,8 @@
     "url": "https://github.com/doinel1a/vite-three-js"
   },
   "scripts": {
-    "prepare": "node ./node_modules/husky/bin.js",
-    "postinstall": "node ./node_modules/@playwright/test/cli.js install",
+    "prepare": "node ./scripts/prepare-husky.mjs",
+    "postinstall": "node ./scripts/postinstall-playwright.mjs",
     "predev": "node --input-type=module -e \"import fs from 'node:fs'; fs.copyFileSync('src/styles/reload-loader.css','public/reload-loader.css')\"",
     "prebuild": "node --input-type=module -e \"import fs from 'node:fs'; fs.copyFileSync('src/styles/reload-loader.css','public/reload-loader.css')\"",
     "dev": "node ./node_modules/vite/bin/vite.js --host",
