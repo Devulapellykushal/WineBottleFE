@@ -1,0 +1,44 @@
+{
+  "rewrites": [
+    {
+      "source": "/configurebottle",
+      "destination": "/configurebottle.html"
+    },
+    {
+      "source": "/configurebottle/",
+      "destination": "/configurebottle.html"
+    },
+    {
+      "source": "/configurator",
+      "destination": "/configurator.html"
+    },
+    {
+      "source": "/configurator/",
+      "destination": "/configurator.html"
+    },
+    {
+      "source": "/bottle",
+      "destination": "/bottle-engraving.html"
+    },
+    {
+      "source": "/bottle/",
+      "destination": "/bottle-engraving.html"
+    },
+    {
+      "source": "/next",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/next/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/dome",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/dome/",
+      "destination": "/index.html"
+    }
+  ]
+}
